@@ -428,3 +428,165 @@ mySelectors = '#foo,#bar,.baz'
   background: #000;
 }
 ```
+
+## 运算符（Operators）
+### 运算符优先级
+下面是运算符优先级表，由高到低。
+```
+ .
+ []
+ ! ~ + -
+ is defined
+ ** * / %
+ + -
+ ... ..
+ <= >= < >
+ in
+ == is != is not isnt
+ is a
+ && and || or
+ ?:
+ = := ?= += -= *= /= %=
+ not
+ if unless
+```
+
+### 一元运算符
+以下一元运算符是可用的，`!`, `not`, `-`, `+`, and `~`.
+```
+!0
+// => true
+
+!!0
+// => false
+
+!1
+// => false
+
+!!5px
+// => true
+
+-5px
+// => -5px
+
+--5px
+// => 5px
+
+not true
+// => false
+
+not not true
+// => true
+```
+
+逻辑运算符not的优先级较低，因此，下面这个例子可以取而代之
+```
+a = 0
+b = 1
+
+!a and !b
+// => false
+// parsed as: (!a) and (!b)
+```
+使用
+```
+not a or b
+// => false
+// parsed as: not (a or b)
+```
+
+### 二元运算符
+#### 下标[]
+下标运算符允许我们从一个表达式获取值（从0开始），负值表示从末尾开始。
+```
+list = 1 2 3
+ list[0]
+ // => 1
+
+ list[-1]
+ // => 3
+```
+带括号的表达式可以当作元祖.
+以下是使用元组进行错误处理的示例（并显示此构造的多功能性）
+```
+ add(a, b)
+   if a is a 'unit' and b is a 'unit'
+     a + b
+   else
+     (error 'a and b must be units!')
+
+ body
+   padding add(1,'5')
+   // => padding: error "a and b must be units";
+   
+   padding add(1,'5')[0]
+   // => padding: error;
+   
+   padding add(1,'5')[0] == error
+   // => padding: true;
+
+   padding add(1,'5')[1]
+   // => padding: "a and b must be units";
+```
+这儿有个更复杂的例子。现在，我们调用内置的error()函数，当标识符（第一个值）等于error的时候返回错误信息。
+```
+if (val = add(1,'5'))[0] == error
+  error(val[1])
+```
+
+### 范围......
+同时提供包含界线操作符(..)和范围操作符(...)，见如下表达式。
+```
+ 1..5
+ // => 1 2 3 4 5
+
+ 1...5
+ // => 1 2 3 4
+
+ 5..1
+ // => 5 4 3 2 1
+```
+#### 加减
+二元加乘运算其单位会转化，或使用默认字面量值。例如，5s - 2px结果是3s.
+```
+15px - 5px
+// => 10px
+
+5 - 2
+// => 3
+
+5in - 50mm
+// => 3.031in
+
+5s - 1000ms
+// => 4s
+
+20mm + 4in
+// => 121.6mm
+
+"foo " + "bar"
+// => "foo bar"
+
+"num " + 15
+// => "num 15"
+```
+
+#### 乘除
+```
+2000ms + (1s * 2)
+// => 4000ms
+
+5s / 2
+// => 2.5s
+
+4 % 2
+// => 0
+```
+当在属性值内使用/时候，你必须用括号包住。否则/会根据其字面意思处理（支持CSS的line-height）
+```
+font: 14px/1.5;
+```
+但是以下是14px÷1.5
+```
+font: (14px/1.5);
+```
