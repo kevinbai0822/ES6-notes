@@ -59,3 +59,18 @@ npm install less less-loader --save-dev
     loader:'style-loader!css-loader!less-loader'
 }
 ```
+
+#### 使用vuex进行组件间的状态管理
+在项目所在目录执行
+```
+npm install vuex --save-dev //用于开发环境
+npm install vuex --save //用于生产环境
+npm install vuex -g //全局安装
+```
+安装完成之后在项目的`main.js`中全局引入vuex
+```
+import Vue from 'vue'
+import Vuex from 'vuex'
+
+Vue.use(Vuex)
+```
